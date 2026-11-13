@@ -39,3 +39,11 @@ coverage/
 # 本地截图/临时产物
 /tmp/
 /screenshots/
+
+# 协作配置目录：仅跟踪技能与计划，其余本地内容忽略
+.codebuddy/*
+!.codebuddy/skills/
+!.codebuddy/plans/
+# .codebuddy/skills 下的技能子目录是指向 .agents/skills 的目录联接，
+# 真实内容已随 .agents 入库，这里只保留说明文件，避免重复跟踪
+.codebuddy/skills/*/
