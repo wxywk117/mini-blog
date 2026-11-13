@@ -11,6 +11,7 @@
 - 数据写入 `localStorage`，刷新或重开浏览器后依然存在
 - 单条删除，带二次确认
 - 空状态引导、安全转义（不做 HTML 解析）、响应式布局
+- 胶片老照片怀旧背景：本地素材 + 做旧滤镜 + 颗粒 / 暗角 / 漏光多层合成
 - 支持 `Ctrl/Cmd + Enter` 快捷发布
 
 ## 快速开始
@@ -31,8 +32,10 @@ python -m http.server 8000
 ```
 .
 ├── index.html            # 页面结构
-├── styles.css            # 样式（设计令牌、布局、动效、响应式）
+├── styles.css            # 样式（设计令牌、布局、胶片背景、动效、响应式）
 ├── app.js                # 逻辑（存储层 / 业务层 / 渲染层 / 事件绑定）
+├── assets/
+│   └── legacy-film.jpg   # 胶片老照片背景素材（本地，离线可用）
 ├── docs/
 │   └── REQUIREMENTS.md   # 需求规格说明书（功能、数据模型、验收标准）
 ├── README.md
@@ -64,6 +67,14 @@ localStorage.removeItem('miniblog.posts.v1');
 
 修改数据结构时请同步提升存储键版本号（如 `v2`），避免旧数据解析异常。
 
+## 更换背景图
+
+1. 准备一张横版复古照片，重命名为 `legacy-film.jpg`，覆盖 `assets/` 下的同名文件（建议长边 1024–1920px，体积 < 300KB）。
+2. 若主体位置偏移，调整 `styles.css` 中 `.mb-backdrop__photo` 的 `background-position`（桌面）以及 `@media (max-width: 640px)` 内的同名属性（移动端）。
+3. 若新图偏冷或偏亮，微调 `.mb-backdrop__photo` 的 `filter`（`sepia` / `saturate` / `contrast` / `brightness`）即可与其他部分保持统一的做旧风格。
+
+背景氛围由 5 层合成：照片 → 暖色遮罩与暗角 → 胶片颗粒（内联 SVG）→ 暖色漏光 → 原有的淡紫光斑与细网格。遮罩透明度集中在 `.mb-backdrop__shade` 中，可按需微调以平衡"氛围"与"可读性"。所有图层均为 `pointer-events: none`，不影响交互与键盘焦点顺序。
+
 ## 版本管理
 
 ```bash
@@ -78,4 +89,6 @@ git push -u origin main
 
 ## 声明
 
-本项目为独立设计与实现的通用短消息记录示例，不包含任何第三方社交平台的名称、商标、图标、配色或页面结构。详见 `docs/REQUIREMENTS.md` 第 2 章。
+本项目为独立设计与实现的通用短消息记录示例，不包含任何第三方社交平台的名称、商标、图标、配色或页面结构。
+
+背景素材 `assets/legacy-film.jpg` 由 AI 生成并裁切压缩，画面为泛化的旧墙、木窗与石墙，不含任何文字、招牌、Logo、可识别人物面部或车辆品牌，可随仓库一同分发。详见 `docs/REQUIREMENTS.md` 第 2 章与 9.4 节。
