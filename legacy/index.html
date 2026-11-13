@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#F5F6FB" />
+  <meta name="description" content="小记 MiniBlog —— 纯前端的短消息记录应用，数据仅保存在你的浏览器本地。" />
+  <title>小记 MiniBlog · 记录此刻</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- 背景装饰层：胶片老照片 → 暖色遮罩 → 颗粒 → 漏光 → 既有光斑与网格 -->
+  <div class="mb-backdrop" aria-hidden="true">
+    <span class="mb-backdrop__photo"></span>
+    <span class="mb-backdrop__shade"></span>
+    <span class="mb-backdrop__grain"></span>
+    <span class="mb-backdrop__leak"></span>
+    <span class="mb-blob mb-blob--one"></span>
+    <span class="mb-blob mb-blob--two"></span>
+    <span class="mb-blob mb-blob--three"></span>
+    <span class="mb-grid"></span>
+  </div>
+
+  <!-- 顶栏 -->
+  <header class="mb-topbar" id="topbar">
+    <div class="mb-topbar__inner">
+      <a class="mb-brand" href="#main" aria-label="小记 MiniBlog 首页">
+        <span class="mb-brand__logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5.2 5.6h13.6a2.2 2.2 0 0 1 2.2 2.2v7.1a2.2 2.2 0 0 1-2.2 2.2h-6.1l-4.4 3.2a.7.7 0 0 1-1.1-.57V17.1H5.2A2.2 2.2 0 0 1 3 14.9V7.8a2.2 2.2 0 0 1 2.2-2.2Z" fill="currentColor" opacity="0.92"/>
+            <circle cx="8.6" cy="11" r="1.15" fill="#fff"/>
+            <circle cx="12.2" cy="11" r="1.15" fill="#fff"/>
+            <circle cx="15.8" cy="11" r="1.15" fill="#fff"/>
+          </svg>
+        </span>
+        <span class="mb-brand__text">
+          <span class="mb-brand__name">小记 <em>MiniBlog</em></span>
+          <span class="mb-brand__slogan">记录此刻，只属于你</span>
+        </span>
+      </a>
+      <div class="mb-topbar__meta">
+        <span class="mb-badge" id="post-count" hidden>0 条动态</span>
+        <span class="mb-local-tag">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 3.6 5 6.6v5.1c0 4.2 2.9 7.6 7 8.7 4.1-1.1 7-4.5 7-8.7V6.6l-7-3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M9.2 11.8l2 2 3.6-3.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          本地存储
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="mb-main" id="main">
+    <!-- 发布区 -->
+    <section class="mb-composer" aria-labelledby="composer-title">
+      <div class="mb-composer__head">
+        <h1 class="mb-composer__title" id="composer-title">今天想说点什么？</h1>
+        <p class="mb-composer__sub">内容只写入你自己的浏览器，不会上传</p>
+      </div>
+
+      <div class="mb-composer__body">
+        <div class="mb-avatar" aria-hidden="true">我</div>
+        <div class="mb-composer__field">
+          <label class="mb-sr-only" for="composer-input">动态内容</label>
+          <textarea
+            id="composer-input"
+            class="mb-textarea"
+            rows="2"
+            placeholder="记录点什么…"
+            aria-describedby="char-counter"
+            autocomplete="off"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="mb-composer__foot">
+        <div class="mb-hints">
+          <span class="mb-counter" id="char-counter" aria-live="polite">已输入 0 / 280</span>
+          <span class="mb-kbd-hint"><kbd>Ctrl</kbd><span>+</span><kbd>Enter</kbd> 快速发布</span>
+        </div>
+        <button type="button" class="mb-btn mb-btn--primary" id="publish-btn" disabled>发布</button>
+      </div>
+
+      <p class="mb-status" id="status-message" role="status" aria-live="polite"></p>
+    </section>
+
+    <!-- 信息流 -->
+    <section class="mb-feed" aria-labelledby="feed-title">
+      <div class="mb-feed__head">
+        <h2 class="mb-feed__title" id="feed-title">最新动态</h2>
+        <span class="mb-feed__summary" id="feed-summary">共 0 条</span>
+      </div>
+
+      <ul class="mb-list" id="post-list"></ul>
+
+      <div class="mb-empty" id="empty-state" hidden>
+        <span class="mb-empty__icon" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="mbEmptyGrad" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#5B4BFF" stop-opacity="0.85"/>
+                <stop offset="1" stop-color="#8A5CFF" stop-opacity="0.35"/>
+              </linearGradient>
+            </defs>
+            <rect x="9" y="15" width="46" height="33" rx="9" stroke="url(#mbEmptyGrad)" stroke-width="2"/>
+            <path d="M22 48v6l8-6" stroke="url(#mbEmptyGrad)" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M21 27h22M21 35h13" stroke="url(#mbEmptyGrad)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <p class="mb-empty__title">还没有任何动态</p>
+        <p class="mb-empty__desc">写下第一条记录，它只会保存在你的浏览器里</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="mb-footer">
+    <p>数据仅保存在本地浏览器，清空浏览器数据将一并清除</p>
+    <p class="mb-footer__version">小记 MiniBlog · v1.0.0</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -125,7 +125,7 @@ textarea {
 .mb-backdrop__photo {
   position: absolute;
   inset: -2%;
-  background-image: url("assets/legacy-film.jpg");
+  background-image: url("../../assets/legacy-film.jpg");
   background-size: cover;
   background-position: 50% 44%;
   background-repeat: no-repeat;
